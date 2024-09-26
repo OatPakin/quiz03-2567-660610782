@@ -2,14 +2,14 @@ import { DB, Payload, readDB, writeDB } from "@lib/DB";
 import { checkToken } from "@lib/checkToken";
 import { nanoid } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
-import { originalDB } from "@lib/DB";
+import { database } from "@lib/DB";
 
 export const GET = async () => {
   readDB();
   return NextResponse.json({
     ok: true,
-    rooms: originalDB.rooms,
-    totalRooms: originalDB.rooms.length,
+    rooms: (<database>DB).rooms,
+    totalRooms: (<database>DB).rooms.length,
   });
 };
 
@@ -33,7 +33,7 @@ export const POST = async (request: NextRequest) => {
 
   readDB();
   if (role === "ADMIN" || role === "SUPER_ADMIN") {
-    const foundAD = originalDB.rooms.find((room) => room.roomName === body.roomName);
+    const foundAD = (<database>DB).rooms.find((room) => room.roomName === body.roomName);
     if (foundAD) {
      return NextResponse.json(
     {
@@ -45,7 +45,7 @@ export const POST = async (request: NextRequest) => {
     }
 
   const roomId = nanoid();
-  originalDB.rooms.push({ roomId: roomId, roomName: body.roomName });
+  (<database>DB).rooms.push({ roomId: roomId, roomName: body.roomName });
 
   //call writeDB after modifying Database
   writeDB();

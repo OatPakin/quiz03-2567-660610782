@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 import { DB, readDB } from "@lib/DB";
 import { NextRequest, NextResponse } from "next/server";
-import { originalDB } from "@lib/DB";
+import { database } from "@lib/DB";
 
 
 export const POST = async (request: NextRequest) => {
@@ -11,7 +11,7 @@ export const POST = async (request: NextRequest) => {
 
   readDB();
   
-  const user  = originalDB.users.find(
+  const user  = (<database>DB).users.find(
     (user) => user.username === username && user.password === password
   );
 
@@ -25,7 +25,7 @@ export const POST = async (request: NextRequest) => {
   );
   };
   const secret = process.env.JWT_SECRET || "This is my special secret";
-  
+
   const token = jwt.sign(
     { username, role: user.role},
     secret,

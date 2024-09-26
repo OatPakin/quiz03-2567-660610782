@@ -2,15 +2,15 @@ import { DB, readDB, writeDB } from "@lib/DB";
 import { checkToken } from "@lib/checkToken";
 import { nanoid } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
-import { originalDB } from "@lib/DB";
 import { Payload } from "@lib/DB";
+import { database } from "@lib/DB";
 
 
 export const GET = async (request: NextRequest) => {
   const roomId = request.nextUrl.searchParams.get("roomId");
   readDB();
   
-  const foundMessage = originalDB.messages.find((message) => message.roomId === roomId);
+  const foundMessage = (<database>DB).messages.find((message) => message.roomId === roomId);
   if (!foundMessage) {
     return NextResponse.json(
       {
@@ -20,7 +20,7 @@ export const GET = async (request: NextRequest) => {
         status: 404 
       });
   }
-  let filtered = originalDB.messages;
+  let filtered = (<database>DB).messages;
   filtered = filtered.filter((messages) => messages.roomId === roomId);
   return NextResponse.json({
     ok: true,
@@ -31,7 +31,7 @@ export const GET = async (request: NextRequest) => {
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
   readDB();
-  const foundRoom = originalDB.rooms.find((room) => room.roomId === body.roomId);
+  const foundRoom = (<database>DB).rooms.find((room) => room.roomId === body.roomId);
   if (!foundRoom) {
     return NextResponse.json(
       {
@@ -44,7 +44,7 @@ export const POST = async (request: NextRequest) => {
 
   const messageId = nanoid();
 
-  originalDB.messages.push({
+  (<database>DB).messages.push({
     roomId: body.roomId,
     messageId: messageId,
     messageText: body.messageText,
@@ -78,7 +78,7 @@ export const DELETE = async (request: NextRequest) => {
   }
   readDB();
   if (role === "SUPER_ADMIN") {
-    const foundMessagetu = originalDB.messages.find(
+    const foundMessagetu = (<database>DB).messages.find(
       (message) => message.messageId === body.messageId
     );
     if (!foundMessagetu) {
@@ -90,7 +90,7 @@ export const DELETE = async (request: NextRequest) => {
     { status: 404 }
   );
     }
-  originalDB.messages = originalDB.messages.filter(
+    (<database>DB).messages = (<database>DB).messages.filter(
       (messages) => messages.messageId !== body.messageId
   );
 

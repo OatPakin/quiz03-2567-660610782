@@ -21,6 +21,11 @@ export interface User {
 export interface Payload {
   role: string;
 }
+export interface database{
+  rooms: Room[];
+  messages: Message[];
+  users: User[];
+}
 
 export const originalDB = {
   rooms: [
