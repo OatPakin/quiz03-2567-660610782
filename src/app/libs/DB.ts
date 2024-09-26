@@ -27,7 +27,7 @@ export interface database{
   users: User[];
 }
 
-export const originalDB = {
+ const originalDB = {
   rooms: [
     {
       roomId: "okhkUzffzCGMqtfC1uv6x",
