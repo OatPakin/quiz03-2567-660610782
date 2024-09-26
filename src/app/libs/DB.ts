@@ -18,8 +18,11 @@ export interface User {
   password: string;
   role: "ADMIN" | "SUPER_ADMIN";
 }
+export interface Payload {
+  role: string;
+}
 
-const originalDB = {
+export const originalDB = {
   rooms: [
     {
       roomId: "okhkUzffzCGMqtfC1uv6x",
